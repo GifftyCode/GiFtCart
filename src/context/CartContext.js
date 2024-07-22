@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useReducer, useEffect } from 'react';
 import { cartReducer } from '../reducer/cartReducer';
 
 const initialState = {
@@ -9,7 +9,14 @@ const initialState = {
 const CartContext = createContext(initialState);
 
 export const CartProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [state, dispatch] = useReducer(cartReducer, initialState, (initial) => {
+    const localData = localStorage.getItem('cartState');
+    return localData ? JSON.parse(localData) : initial;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cartState', JSON.stringify(state));
+  }, [state]);
 
   const addToCart = (product) => {
     const updatedCartList = state.cartList.concat(product);
@@ -27,7 +34,6 @@ export const CartProvider = ({ children }) => {
       (current) => current.id !== product.id
     );
     updateTotal(updatedCartList);
-
     dispatch({
       type: 'REMOVE_FROM_CART',
       payload: {
@@ -38,8 +44,7 @@ export const CartProvider = ({ children }) => {
 
   const updateTotal = (products) => {
     let total = 0;
-    products.forEach((product) => (total = total + product.price));
-
+    products.forEach((product) => (total += product.price));
     dispatch({
       type: 'UPDATE_TOTAL',
       payload: {
@@ -58,7 +63,4 @@ export const CartProvider = ({ children }) => {
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
-export const useCart = () => {
-  const context = useContext(CartContext);
-  return context;
-};
+export const useCart = () => useContext(CartContext);

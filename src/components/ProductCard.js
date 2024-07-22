@@ -9,13 +9,22 @@ export const ProductCard = ({ product }) => {
   const { id, name, price, image } = product;
 
   useEffect(() => {
-    const productIsInCart = cartList.find((cartItem) => cartItem.id === id);
+    // Retrieve cart items from local storage on component mount
+    const storedCartList = JSON.parse(localStorage.getItem('cartList')) || [];
+    const productIsInCart = storedCartList.find(
+      (cartItem) => cartItem.id === id
+    );
     if (productIsInCart) {
       setIsInCart(true);
     } else {
       setIsInCart(false);
     }
-  }, [cartList, id]);
+  }, [id]);
+
+  useEffect(() => {
+    // Save cart items to local storage whenever cartList changes
+    localStorage.setItem('cartList', JSON.stringify(cartList));
+  }, [cartList]);
 
   return (
     <div className='productCard'>
