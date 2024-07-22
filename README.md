@@ -1,70 +1,115 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# GIFtCart
 
-## Available Scripts
+GIFtCart is a React-based shopping cart application. It demonstrates how to use `useContext` and `useReducer` for state management in a React application. This README provides a step-by-step guide on how these hooks are used within the project.
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+1. [Introduction](#introduction)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [State Management](#state-management)
+    - [Context Setup](#context-setup)
+    - [Reducer Setup](#reducer-setup)
+    - [Local Storage Integration](#local-storage-integration)
+5. [Components Overview](#components-overview)
+6. [License](#license)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Introduction
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+GIFtCart is designed to help newbie like me understand and implement a shopping cart using React hooks. It leverages `useContext` to provide global state and `useReducer` to manage state transitions, along with local storage to persist the state.
 
-### `npm test`
+## Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clone the repository:**
 
-### `npm run build`
+   ```bash
+   git clone https://github.com/GifftyCode/GIFtCart.git
+   cd GIFtCart
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. **Install dependencies:**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```bash
+   npm install
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Start the development server:**
 
-### `npm run eject`
+   ```bash
+   npm start
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Usage
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **Home Page:**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+   The home page displays a list of products that users can add to their cart.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2. **Cart Page:**
 
-## Learn More
+   The cart page shows the products that have been added to the cart, along with the total price. Users can remove products from the cart.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## State Management
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Context Setup
 
-### Code Splitting
+The context is created using `createContext` and provides the cart state and actions to components that need them. The context provider wraps the application to make the cart state available globally.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- **Creating the Context:** 
+  - A context is created with an initial state containing an empty cart list and a total of 0.
+  - The context is then exported for use in other components.
 
-### Analyzing the Bundle Size
+- **Using the Context Provider:**
+  - The `CartProvider` component uses the `useReducer` hook to manage the cart state.
+  - It also uses `useEffect` to persist the state to local storage whenever the state changes.
+  - The context provider wraps the main application component to provide state and dispatch functions to the entire app.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Reducer Setup
 
-### Making a Progressive Web App
+The reducer manages state transitions based on dispatched actions. It defines how the state should change in response to actions such as adding or removing items from the cart.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- **Defining Actions:**
+  - Actions are defined for adding items to the cart, removing items from the cart, and updating the total price.
+  - Each action updates the state accordingly and returns the new state.
 
-### Advanced Configuration
+- **Handling State Transitions:**
+  - The `cartReducer` function handles the state transitions based on the action type.
+  - It updates the state by adding or removing products and recalculating the total price.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Local Storage Integration
 
-### Deployment
+Local storage is used to persist the cart state across page refreshes. 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **Saving State to Local Storage:**
+  - The `useEffect` hook is used to save the cart state to local storage whenever it changes.
+  - This ensures that the cart state is persistent across page reloads.
 
-### `npm run build` fails to minify
+- **Loading State from Local Storage:**
+  - The initial state for the `useReducer` hook is set by checking if there is any saved state in local storage.
+  - If a saved state is found, it is used as the initial state; otherwise, the default initial state is used.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Components Overview
+
+### Key Components
+
+1. **Header:**
+   - Displays the logo, navigation links, and the cart item count.
+
+2. **Home:**
+   - Displays a list of products that users can add to the cart.
+
+3. **Cart:**
+   - Shows the products added to the cart and the total price.
+   - Allows users to remove products from the cart.
+
+4. **ProductCard:**
+   - Displays individual product details and allows users to add or remove products from the cart.
+
+5. **CartCard:**
+   - Displays individual products in the cart with an option to remove them.
+
+## License
+
+This project is licensed under the MIT License.
+
